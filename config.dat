@@ -1,0 +1,125 @@
+#
+# $Id: config.dat 14068 2012-08-13 13:51:15Z avinash $
+# Sample PowerMTA configuration file
+#
+
+#
+# E-mail address for mailer's administrator (please specify!)
+#
+postmaster nagarajan.ramalingam@venpep.com
+
+#
+# IP address(es) and port(s) on which to listen for incoming SMTP connections
+#
+smtp-listener 0/0:25        # listens on all local IPs
+
+#
+# Settings per source IP address (for incoming SMTP connections)
+#
+<source 127.0.0.1>
+    always-allow-relaying yes   # allow feeding from 127.0.0.1
+    process-x-virtual-mta yes   # allow selection of a virtual MTA
+    max-message-size unlimited
+    smtp-service yes            # allow SMTP service
+</source>
+<source 66.45.248.11>
+    always-allow-relaying yes   # allow feeding from 66.45.248.11
+    process-x-virtual-mta yes   # allow selection of a virtual MTA
+    max-message-size unlimited
+    smtp-service yes            # allow SMTP service
+</source>
+
+<source 104.37.190.66>
+    always-allow-relaying yes   # allow feeding from 66.45.248.11
+    process-x-virtual-mta yes   # allow selection of a virtual MTA
+    max-message-size unlimited
+    smtp-service yes            # allow SMTP service
+</source>
+
+
+<source 0/0>                 # matches all
+    log-connections no
+    log-commands    no       # WARNING: verbose!
+    log-data        no       # WARNING: even more verbose!
+</source>
+
+#
+# SMTP users (authenticated via SMTP AUTH)
+#
+#<smtp-user API>
+#    password "changeme"
+#</smtp-user>
+
+#
+# Settings per outgoing domain
+#
+#<domain discard.port25.com>
+#    max-smtp-out    800
+#    route           [192.168.0.1]:2525  # bypasses DNS resolution
+#</domain>
+#
+#<domain test.port25.com>
+#    max-smtp-out    1
+#    log-connections yes
+#    log-commands    yes     # WARNING: verbose!
+#    log-resolution  no      # WARNING: verbose!
+#    log-data        no      # WARNING: even more verbose!
+#</domain>
+
+<domain *>
+    max-smtp-out    2000       # max. connections *per domain*
+    bounce-after    4d12h    # 4 days, 12 hours
+    retry-after     10m      # 10 minutes
+</domain>
+
+<virtual-mta mta1>
+	smtp-source-host 66.45.248.11 vidmail.in
+</virtual-mta>
+
+#<virtual-mta-pool pond>
+#virtual-mta mta1
+#</virtual-mta-pool>
+
+#
+# Port used for HTTP management interface
+#
+http-mgmt-port 8080
+
+#
+# IP addresses allowed to access the HTTP management interface, one
+# per line
+#
+http-access 127.0.0.1 monitor
+http-access ::1 monitor
+#http-access 10.1.0.10 none
+#http-access 10.1.0/24 admin
+#http-access 127.0.0.1 editConfig
+
+
+
+
+#
+# Logging file
+#
+log-file log\pmta.log
+
+#
+# Accounting file(s)
+#
+<acct-file log\acct.csv>
+    #move-to C:\powerMTALog   # configure as fit for your application
+    move-interval 1m
+    max-size 50M
+    delete-after 8d
+</acct-file>
+
+#
+# Spool directories
+#
+<spool spool>
+    deliver-only no
+</spool>
+
+# EOF
+
+host-name WIN-J6UMUL46BJD.interserver.net
